@@ -1,0 +1,220 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>红豆社区</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+  <link rel="stylesheet" href="/styles/font-awesome.min.css" />
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      position: relative;
+      background: #f7f7f7;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      height: 100%;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none
+    }
+    p {
+      margin: 0;
+      padding: 0;
+    }
+    a {
+      text-decoration: none;
+    }
+    a:hover {
+      opacity: 0.5
+    }
+    .cityLayer {
+      position: fixed;
+      text-align: center;
+      height: 30px;
+      line-height: 30px;
+      width: 100%;
+      max-width: 600px;
+      background: #f7f7f7
+    }
+    .cityLayer .city-button {
+      cursor: pointer;
+      position: absolute;
+      right: 10px;
+      top: 0;
+      height: 3px;
+      line-height: 30px;
+    }
+    .cityLayer .city-name {
+      font-size: 14px;
+    }
+    .cities-wrap {
+      position: fixed;
+      top: 30px;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      margin: 0 auto;
+      background: #f7f7f7;
+      transition: opacity 0.5s linear;
+    }
+    .city-item {
+      float: left;
+      width: 20%;
+      border-right: 2px solid #ffffff;
+      box-sizing: border-box;
+      margin: 5px 0;
+      cursor: pointer;
+    }
+    .city-item a {
+      color: #999999;
+    }
+    .city-item:nth-child(5n) {
+      border-right: none
+    }
+    .topic-list {
+      background: #ffffff;
+      padding-top: 30px;
+    }
+    .topic-item {
+      margin: 0 20px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee
+    }
+    .topic-item-title {
+      font-size: 18px;
+      color: #333333;
+    }
+    .topic-item-title: active {
+      opacity: 0.5;
+    }
+    .topic-item-stat {
+      overflow: hidden;
+      padding-top: 5px;
+    }
+    .topic-item-stat span {
+      color: #999999;
+      font-size: 13px;
+    }
+    .topic-item-time {
+      margin-right: 10px
+    }
+    .load-more {
+      text-align: center;
+      height: 35px;
+      line-height: 35px;
+      color: #999999;
+      font-size: 15px;
+    }
+    .fl {
+      float: left;
+    }
+
+    .fr {
+      float: right;
+    }
+
+    .mr2 {
+      margin-right: 2px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="cityLayer">
+    红豆社区
+    <div class="city-button">
+      <i class="fa fa-map-marker mr2" style="font-size: 15px"></i>
+      <span class="city-name" id="cityName">玉林</span>
+    </div>
+  </div>
+  <ul class="cities-wrap" style="opacity: 0" id="cityList">
+    <li class="city-item"><a href="/city/nanning">南宁</a></li>
+    <li class="city-item"><a href="/city/liuzhou">柳州</a></li>
+    <li class="city-item"><a href="/city/guilin">桂林</a></li>
+    <li class="city-item"><a href="/city/yulin">玉林</a></li>
+    <li class="city-item"><a href="/city/wuzhou">梧州</a></li>
+    <li class="city-item"><a href="/city/beihai">北海</a></li>
+    <li class="city-item"><a href="/city/baise">百色</a></li>
+    <li class="city-item"><a href="/city/hechi">河池</a></li>
+    <li class="city-item"><a href="/city/qinzhou">钦州</a></li>
+    <li class="city-item"><a href="/city/hezhou">贺州</a></li>
+    <li class="city-item"><a href="/city/laibin">来宾</a></li>
+    <li class="city-item"><a href="/city/guigang">贵港</a></li>
+    <li class="city-item"><a href="/city/fangchenggang">防城港</a></li>
+    <li class="city-item"><a href="/city/chongzuo">崇左</a></li>
+    </ul>
+  <ul class="topic-list">
+    <% for(var i = 0; i < data.length; i++) { %>
+      <li class="topic-item">
+        <a href="<%= data[i].url %>" class="topic-item-title"><%= data[i].title %></a>
+        <div class="topic-item-stat">
+          <span class="fl topic-item-time"><i class="fa fa-clock-o mr2"></i><%= data[i].lastReplyTime %></span>
+          <span class="fl topic-item-user"><i class="fa fa-user mr2"></i><%= data[i].author %></span>
+          <span class="fr topic-item-comments"><i class="fa fa-comment mr2"></i><%= data[i].comments %></span>
+        </div>
+      </li>
+    <% } %>
+  </ul>
+  <p class="load-more">下拉加载更多</p>
+  <script src="/js/zepto.min.js"></script>
+  <script>
+    var cityList = document.querySelector('#cityList')
+    var cityName = document.querySelector('#cityName')
+    var currentCityName = location.pathname.split('/')[2]
+    var cityItems = cityList.querySelectorAll('a')
+    for(var i = 0; i < cityItems.length; i++) {
+      if(cityItems[i].href.indexOf(currentCityName) > 0) {
+        cityName.textContent = cityItems[i].textContent
+        break
+      }
+    }
+    cityName.onclick = function() {
+      cityList.style.opacity = cityList.style.opacity == 0 ? 0.98 : 0
+    }
+
+    var cHeight = document.documentElement.clientHeight
+    var isFetching = false
+    var page = 2
+    window.onscroll = function() {
+      cityList.style.opacity = 0
+      // console.log(document.documentElement.scrollHeight - cHeight - document.body.scrollTop)
+      if(document.documentElement.scrollHeight - cHeight - document.body.scrollTop < 50) {
+        if(!isFetching) {
+          isFetching = true
+          $('.load-more').text('加载中')
+          $.ajax({
+            url: location.href + `?page=${page++}`,
+            success: data => {
+              var validData = data.slice(4)
+              for(var j = 0; j < validData.length; j++) {
+                $('.topic-list').append(
+                  `<li class="topic-item">
+                    <a href="${validData[j].url}" class="topic-item-title">${validData[j].title}</a>
+                    <div class="topic-item-stat">
+                      <span class="fl topic-item-time"><i class="fa fa-clock-o mr2"></i>${validData[j].lastReplyTime}</span>
+                      <span class="fl topic-item-user"><i class="fa fa-user mr2"></i>${validData[j].author}</span>
+                      <span class="fr topic-item-comments"><i class="fa fa-comment mr2"></i>${validData[j].comments}</span>
+                    </div>
+                  </li>`)
+              }
+              
+              if(data.length >= 60) {
+                isFetching = false
+                $('.load-more').text('下拉加载更多')
+              } else {
+                $('.load-more').text('已无更多了')
+              }
+            }
+          })
+        }
+      }
+    }
+  </script>
+</body>
+</html>

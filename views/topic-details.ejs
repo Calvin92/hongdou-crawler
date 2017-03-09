@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>红豆社区</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon" />
+  <link rel="stylesheet" href="/styles/font-awesome.min.css" />
+  <style>
+    body {
+      background: #f7f7f7;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .topic-list {
+      list-style: none;
+      background: #ffffff;
+      padding: 0;
+      margin: 0;
+    }
+    .topic-item {
+      display: flex;
+      margin: 0 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee
+    }
+    .topic-item-avatar {
+      width: 80px;
+      position: relative;
+    }
+    .topic-item-avatar img {
+      width: 60px;
+      height: 60px;
+      border-radius: 30px
+    }
+    .topic-item-content {
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .topic-item-content .username {
+      color: #666666;
+    }
+    span.bkspan {
+      background: #cccccc;
+      color: #ffffff;
+      padding: 0 5px;
+      border-radius: 3px;
+      font-size: 13px;
+    }
+
+    .floor-wrap {
+      color: #666666;
+      padding: 5px 0;
+      font-size: 13px
+    }
+    .message {
+      padding: 10px 0;
+      color: #333333;
+      font-size: 16px;
+      overflow: hidden;
+      white-space: pre-wrap;
+      max-width: 500px;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+    .message img {
+      display: block;
+      margin-bottom: 8px
+    }
+    .has-more {
+      text-align: center;
+      color: #999999;
+      height: 35px;
+      line-height: 35px;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <ul class="topic-list">
+    <% for(var i = 0; i < data.length; i++) { %>
+      <li class="topic-item">
+        <div class="topic-item-avatar">
+          <img src="/default_avatar.jpg" width="60" height="60" alt="默认头像" style="position: absolute; border-radius: 30px; top: 0; left: 0; z-index: -1" />
+          <img src="<%= data[i].avatarUrl %>" onerror="this.src='/default_avatar.jpg'" />
+        </div>
+        <div class="topic-item-content">
+          <div class="topic-item-userinfo">
+            <span class="username"><%= data[i].username %></span>
+            <% if(data[i].comefrom) { %>
+              <span class="comefrom bkspan"><%= data[i].comefrom %></span>
+            <% } %>
+          </div>
+          <div class="floor-wrap">
+            <span class="which-floor">第<%= (i+1) %>楼</span>&nbsp;
+            <span class="publish-time"><%= data[i].publishTime %></span>
+          </div>
+          <div class="message"><%- data[i].message %></div>
+        </div>
+      </li>
+    <% } %>
+  </ul>
+  <p class="has-more">已无更多了</p>
+  <script src="/js/zepto.min.js"></script>
+  <script>
+    if($('.topic-item').length == 20) {
+      $('.has-more').text('下拉加载更多')
+
+      var cHeight = document.documentElement.clientHeight
+      var isFetching = false
+      var page = 2
+      window.onscroll = function() {
+        if(document.documentElement.scrollHeight - cHeight - document.body.scrollTop < 50) {
+          if(!isFetching) {
+            isFetching = true
+            $('.has-more').text('加载中')
+            $.ajax({
+              url: location.href + `?page=${page++}`,
+              success: data => {
+                for(var i = 0; i < data.length; i++) {
+                  $('.topic-list').append(`
+                    <li class="topic-item">
+                      <div class="topic-item-avatar">
+                        <img src="${data[i].avatarUrl}" onerror="this.src='/default_avatar.jpg'" />
+                      </div>
+                      <div class="topic-item-content">
+                        <div class="topic-item-userinfo">
+                          <span class="username">${data[i].username}</span>
+                          <span class="${data[i].comefrom ? 'comefrom bkspan' : ''}comefrom bkspan">${data[i].comefrom}</span>
+                        </div>
+                        <div class="floor-wrap">
+                          <span class="which-floor">${(page - 2) * 20 + (i + 1)}楼</span>&nbsp;
+                          <span class="publish-time">${data[i].publishTime}</span>
+                        </div>
+                        <div class="message">${data[i].message}</div>
+                      </div>
+                    </li>`)
+                }
+                if(data.length < 20) {
+                  $('.has-more').text('已无更多了')
+                } else {
+                  isFetching = false
+                  $('.has-more').text('下拉加载更多')
+                }
+              }
+            })
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>

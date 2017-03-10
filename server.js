@@ -152,13 +152,13 @@ app.get('/topic/:id', (req, response) => {
     res.on('data', chunk => {
       bufferHelper.concat(chunk)
     })
-    let pageSize = 0 // 最大页数
+    let pageSize = 1 // 最大页数
     res.on('end', () => {
       let html = iconv.decode(bufferHelper.toBuffer(),'GB2312')
       const $ = cheerio.load(html)
       let arr = []
       let items = $('.posttable')
-      pageSize = !!$('td.pagenav').eq(1) && $('td.pagenav').eq(1).text().split('/')[1].split('页')[0]
+      pageSize = $('td.pagenav').eq(1).text() && $('td.pagenav').eq(1).text().split('/')[1].split('页')[0]
       for(let i = 0; i < items.length; i++) {
         const avatarUrl = items.eq(i).find('.smallfont a img').attr('src')
         // const username = "开车上纽北"

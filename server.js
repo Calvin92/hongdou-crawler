@@ -197,14 +197,13 @@ app.get('/topic/:id', (req, response) => {
 })
 
 app.get('/', (req, res) => {
-  res.redirect('/city/yulin')
+  res.render('index', {})
 })
 
 app.get('*', (req, res) => {
   if (!renderer) {
     return res.end('waiting for compilation... refresh in a moment.')
   }
-
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 

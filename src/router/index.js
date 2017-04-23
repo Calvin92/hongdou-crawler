@@ -6,6 +6,7 @@ Vue.use(Router)
 import { createListView } from '../views/CreateListView'
 import ItemView from '../views/ItemView.vue'
 import UserView from '../views/UserView.vue'
+import IndexView from '../views/IndexView.vue'
 
 export default new Router({
   mode: 'history',

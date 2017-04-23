@@ -45,6 +45,7 @@
       left: 0;
       background: #ddd;
       color: #fff;
+      z-index: 999;
     }
     .bottom-tabs > div {
       flex: 1;
@@ -53,6 +54,8 @@
       height: 50px;
       align-items: center;
       justify-content: center;
+      -webkit-user-select:none;
+      user-select:none;
     }
     .bottom-tabs > div:last-child {
       border-right: 0;
@@ -77,10 +80,10 @@
   <div id="tab3" class="tabview tabview3 hide">菜单分类详情</div>
   <div id="tab4" class="tabview tabview4 hide">关于我们的最新资讯</div>
   <div class="bottom-tabs">
-    <div class="active" data-index="1">首页</div>
-    <div data-index="2">热门</div>
-    <div data-index="3">分类</div>
-    <div data-index="4">资讯</div>
+    <div class="active" data-index="0">首页</div>
+    <div data-index="1">热门</div>
+    <div data-index="2">分类</div>
+    <div data-index="3">资讯</div>
   </div>
   <script type="text/javascript">
     var currentActiveTab = 1
@@ -105,7 +108,7 @@
         addClass(tabviews[i], 'hide')
       }
       addClass(e.target, 'active')
-      removeClass(tabviews[e.target.dataset.index - 1], 'hide')
+      removeClass(tabviews[e.target.dataset.index], 'hide')
     }
   </script>
 </body>
